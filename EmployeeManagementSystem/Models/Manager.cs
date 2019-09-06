@@ -2,16 +2,12 @@
 {
     public class Manager : Employee
     {
-        private EmployeeData record;
 
-        public Manager(EmployeeData record)
+        public Manager( )
         {
-            this.record = record;
+         
         }
 
-        public override EmployeeData GetEmployeeData()
-        {
-            return record;
-        }
+    
     }
 }

@@ -7,6 +7,6 @@ namespace EmployeeManagementSystem.Models
 {
     public abstract class Employee
     {
-        public abstract EmployeeData GetEmployeeData();
+        
     }
 }

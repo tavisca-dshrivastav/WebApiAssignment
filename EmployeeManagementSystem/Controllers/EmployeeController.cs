@@ -7,36 +7,38 @@ using EmployeeManagementSystem.Models;
 
 namespace EmployeeManagementSystem.Controllers
 {
-    [Route("api")]
+    [Route("api/{controller}")]
     [ApiController]
     public class EmployeeController : ControllerBase
     {
        
         // GET api/values
-        [HttpGet("employee")]
+        [HttpGet]
         public ActionResult<IEnumerable<EmployeeData>> Get()
         {
-            var recordList = ControllerUtility.GetEmployeeDataFromRecord(EmployeeList.employeeList);
-            return recordList ?? (ActionResult<IEnumerable<EmployeeData>>)NotFound();
+            return EmployeeList.employeeList ?? (ActionResult<IEnumerable<EmployeeData>>)NotFound();
         }
-
-        // GET api/values/5
-        [HttpGet("manager/{id}/employee")]
-        public ActionResult<IEnumerable<EmployeeData>> Get(string id)
+        [HttpGet("{id}")]
+        public ActionResult<EmployeeData> GetEmployee(string id)
         {
-            var recordList = ControllerUtility.GetEmployeeListUnderManager(id);
-            List<EmployeeData> empData = ControllerUtility.GetEmployeeDataFromRecord(recordList);
-            return empData ?? (ActionResult<IEnumerable<EmployeeData>>)NotFound();
+            return EmployeeList.GetEmployeeData(id) ?? (ActionResult<EmployeeData>)StatusCode(404);
         }
 
+       
         // POST api/values
-        [HttpPost("employee/add")]
+        [HttpPost("add")]
         public ActionResult Post([FromBody] EmployeeData record)
         {
-            Employee emp = new EmployeeFactory().MakeEmployee(record);
-            EmployeeList.employeeList.Add(emp);
-      
-            return (ActionResult)CreatedAtAction("status code", 201);
+            try
+            {
+                record.AddEmployee();
+                return StatusCode(201);
+            }
+            catch
+            {
+                return StatusCode(409);
+            }
+            
         }
 
         // PUT api/values/5

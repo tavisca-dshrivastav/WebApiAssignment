@@ -7,26 +7,26 @@ namespace EmployeeManagementSystem
 {
     public class ControllerUtility
     {
-        public static List<Employee> GetEmployeeListUnderManager(string id)
-        {
-            foreach (var rec in EmployeeList.empUnderManagerList)
-            {
-                var isManagerAvailable = rec.Key.GetEmployeeData().Id == id;
-                if (isManagerAvailable)
-                    return rec.Value;
-            }
+        //public static List<Employee> GetEmployeeListUnderManager(string id)
+        //{
+        //    foreach (var rec in EmployeeList.empUnderManagerList)
+        //    {
+        //        var isManagerAvailable = rec.Key.GetEmployeeData().Id == id;
+        //        if (isManagerAvailable)
+        //            return rec.Value;
+        //    }
 
-            return null;
-        }
+        //    return null;
+        //}
 
-        public static List<EmployeeData> GetEmployeeDataFromRecord(List<Employee> recordList)
-        {
-            var employeeData = new List<EmployeeData>();
-            foreach (var emp in recordList)
-            {
-                employeeData.Add(emp.GetEmployeeData());
-            }
-            return employeeData;
-        }
+        //public static List<EmployeeData> GetEmployeeDataFromRecord(List<Employee> recordList)
+        //{
+        //    var employeeData = new List<EmployeeData>();
+        //    foreach (var emp in recordList)
+        //    {
+        //        employeeData.Add(emp.GetEmployeeData());
+        //    }
+        //    return employeeData;
+        //}
     }
 }

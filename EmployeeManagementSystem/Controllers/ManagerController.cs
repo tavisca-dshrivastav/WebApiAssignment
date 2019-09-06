@@ -12,51 +12,36 @@ namespace EmployeeManagementSystem.Controllers
     [ApiController]
     public class ManagerController : ControllerBase
     {
-        // GET api/values
+        // GET api/manager
         [HttpGet]
         public ActionResult<IEnumerable<EmployeeData>> Get()
         {
-            var managers = EmployeeList.empUnderManagerList.Keys;
-            var empData = ControllerUtility.GetEmployeeDataFromRecord(managers.ToList<Employee>());
-            return empData ?? (ActionResult<IEnumerable<EmployeeData>>)NotFound();
+            return EmployeeList.GetManagersData() ?? (ActionResult<IEnumerable<EmployeeData>>)NotFound("No Manager Found");
         }
 
         // GET api/values/5
         [HttpGet("{id}")]
         public ActionResult<EmployeeData> Get(string id)
         {
-            foreach(var emp in EmployeeList.employeeList)
-            {
-                bool isManager = emp.GetType() == typeof(Manager);
-                if (isManager && emp.GetEmployeeData().Id.Equals(id))
-                    return emp.GetEmployeeData();
-            }
-            return NotFound();
+            return EmployeeList.GetManager(id) ?? (ActionResult<EmployeeData>)NotFound("No Manager Found");
         }
 
-        
+        // GET api/manager/5/employees
+        [HttpGet("{id}/employees")]
+        public ActionResult<IEnumerable<EmployeeData>> GetEmployeesUnderManager(string id)
+        {
+            return EmployeeList.GetEmployeesUnderManager(id.GetEmployeeData()) ?? (ActionResult<IEnumerable<EmployeeData>>)NotFound("No Employee Found");
+        }
+
+
         // POST api/values
         [HttpPost("add/")]
         public ActionResult Post([FromBody] EmployeeUnderManager employeeUnderManager)
         {
-            Employee emp = employeeUnderManager.ManagerId.GetEmployee();
-            bool isManager = emp != null ? emp is Manager ? true : false : false;
-            List <Employee> employees = new List<Employee>();
-            foreach(var empId in employeeUnderManager.Employees)
-            {
-                var t = empId.GetEmployee();
-                if (t != null)
-                    employees.Add(t);
-            }
-           
-            if (isManager)
-            {
-                EmployeeList.AddManager(emp, employees);
-                return StatusCode(201);
-            }
-
-            //return employeeUnderManager;
-            return StatusCode(409);
+            bool isSuccessfullyAssigned = EmployeeList.AssignEmployeesToManager(employeeUnderManager.ManagerId, employeeUnderManager.Employees);
+            if(!isSuccessfullyAssigned)
+                return StatusCode(409);
+            return StatusCode(201);
         }
 
         // PUT api/values/5

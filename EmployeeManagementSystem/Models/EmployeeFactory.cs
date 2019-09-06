@@ -10,9 +10,9 @@ namespace EmployeeManagementSystem.Models
         public Employee MakeEmployee(EmployeeData record)
         {
             if (record.Type == EmployeeType.GENERALEMPLOYEE)
-                return new GeneralEmployee(record);
+                return new GeneralEmployee();
             else if(record.Type == EmployeeType.MANAGER)
-                return new Manager(record);
+                return new Manager();
             throw new InvalidEmployeeTypeException("This is invalid Exception");
         }
     }
