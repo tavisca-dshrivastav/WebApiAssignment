@@ -31,11 +31,12 @@ namespace EmployeeManagementSystem.Controllers
 
         // POST api/values
         [HttpPost("employee/add")]
-        public EmployeeData Post([FromBody] EmployeeData record)
+        public ActionResult Post([FromBody] EmployeeData record)
         {
             Employee emp = new EmployeeFactory().MakeEmployee(record);
             EmployeeList.employeeList.Add(emp);
-            return record;
+      
+            return (ActionResult)CreatedAtAction("status code", 201);
         }
 
         // PUT api/values/5

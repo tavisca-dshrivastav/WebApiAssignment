@@ -37,21 +37,26 @@ namespace EmployeeManagementSystem.Controllers
         
         // POST api/values
         [HttpPost("add/")]
-        public EmployeeUnderManager Post([FromBody] EmployeeUnderManager employeeUnderManager)
+        public ActionResult Post([FromBody] EmployeeUnderManager employeeUnderManager)
         {
-            Employee manager = employeeUnderManager.ManagerId.GetEmployee();
-            List<Employee> employees = new List<Employee>();
+            Employee emp = employeeUnderManager.ManagerId.GetEmployee();
+            bool isManager = emp != null ? emp is Manager ? true : false : false;
+            List <Employee> employees = new List<Employee>();
             foreach(var empId in employeeUnderManager.Employees)
             {
                 var t = empId.GetEmployee();
                 if (t != null)
                     employees.Add(t);
             }
-            bool isManager = manager.GetType() == typeof(Manager);
-            if(isManager)
-                EmployeeList.AddManager(manager, employees);
+           
+            if (isManager)
+            {
+                EmployeeList.AddManager(emp, employees);
+                return StatusCode(201);
+            }
 
-            return employeeUnderManager;
+            //return employeeUnderManager;
+            return StatusCode(409);
         }
 
         // PUT api/values/5

@@ -12,7 +12,7 @@
             Age = age;
             Salary = salary;
         }
-
+        
 
         public EmployeeType Type { get; private set; }
         public string Id { get; private set; }
