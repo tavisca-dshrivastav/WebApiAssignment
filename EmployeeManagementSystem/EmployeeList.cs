@@ -108,10 +108,19 @@ namespace EmployeeManagementSystem
                     return emp;
             return null;
         }
-        
+
         public static void AddEmployee(this EmployeeData employeeData)
         {
             employeeList.Add(employeeData);
+        }
+        public static bool DeleteEmployee(this string id)
+        {
+            int recordIndex = employeeList.IndexOf(employeeList.Where<EmployeeData>(x => x.Id == id).FirstOrDefault<EmployeeData>());
+            if (recordIndex < 0)
+                return false;
+            employeeList.RemoveAt(recordIndex);
+
+            return true;
         }
     }
 }

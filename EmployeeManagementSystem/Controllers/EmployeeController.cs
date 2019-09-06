@@ -24,10 +24,10 @@ namespace EmployeeManagementSystem.Controllers
             return EmployeeList.GetEmployeeData(id) ?? (ActionResult<EmployeeData>)StatusCode(404);
         }
 
-       
+
         // POST api/values
         [HttpPost("add")]
-        public ActionResult Post([FromBody] EmployeeData record)
+        public  ActionResult Post([FromBody] EmployeeData record)
         {
             try
             {
