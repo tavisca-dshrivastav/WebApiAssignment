@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using EmployeeManagementSystem.Models;
 namespace EmployeeManagementSystem
 {
-    public class EmployeeList
+    public static class EmployeeList
     {
         
         public static List<Employee> employeeList = new List<Employee>
@@ -23,6 +23,18 @@ namespace EmployeeManagementSystem
                 { employeeList[0], new List<Employee>{ employeeList[1], employeeList[2], employeeList[3] } },
                 { employeeList[4], new List<Employee>{ employeeList[5], employeeList[6] } },
             };
-        
+        public static Employee GetEmployee(this string id)
+        {
+            foreach(Employee emp in employeeList)
+            {
+                bool isEmployee = emp.GetEmployeeData().Id.Equals(id);
+                if (isEmployee) return emp;
+            }
+            return null;
+        }
+        public static void AddManager(Employee manager, List<Employee> employees)
+        {
+            empUnderManagerList[manager] = employees;
+        }
     }
 }

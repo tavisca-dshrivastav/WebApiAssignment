@@ -16,7 +16,7 @@ namespace EmployeeManagementSystem
                     return rec.Value;
             }
 
-            return new List<Employee> { };
+            return null;
         }
 
         public static List<EmployeeData> GetEmployeeDataFromRecord(List<Employee> recordList)

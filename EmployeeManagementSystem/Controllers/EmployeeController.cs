@@ -17,7 +17,7 @@ namespace EmployeeManagementSystem.Controllers
         public ActionResult<IEnumerable<EmployeeData>> Get()
         {
             var recordList = ControllerUtility.GetEmployeeDataFromRecord(EmployeeList.employeeList);
-            return recordList;
+            return recordList ?? (ActionResult<IEnumerable<EmployeeData>>)NotFound();
         }
 
         // GET api/values/5
@@ -26,11 +26,11 @@ namespace EmployeeManagementSystem.Controllers
         {
             var recordList = ControllerUtility.GetEmployeeListUnderManager(id);
             List<EmployeeData> empData = ControllerUtility.GetEmployeeDataFromRecord(recordList);
-            return empData;
+            return empData ?? (ActionResult<IEnumerable<EmployeeData>>)NotFound();
         }
 
         // POST api/values
-        [HttpPost("employee")]
+        [HttpPost("employee/add")]
         public EmployeeData Post([FromBody] EmployeeData record)
         {
             Employee emp = new EmployeeFactory().MakeEmployee(record);

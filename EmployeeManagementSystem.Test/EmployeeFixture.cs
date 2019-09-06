@@ -6,11 +6,18 @@ namespace EmployeeManagementSystem.Test
     public class EmployeeFixture
     {
         [Fact]
-        public void Employee_is_manager_when_type_is_manager()
+        public void Employee_can_be_manager()
         {
-            EmployeeData employeeData = new EmployeeData(EmployeeType.GENERALEMPLOYEE, "123", "deepak", 21, 12);
+            EmployeeData employeeData = new EmployeeData(EmployeeType.MANAGER, "123", "deepak", 21, 12);
             Employee employee = new EmployeeFactory().MakeEmployee(employeeData);
-            Assert.IsType<GeneralEmployee>(employee);
+            Assert.IsType<Manager>(employee);
+        }
+        [Fact]
+        public void Employee_can_be_General_Employee()
+        {
+            EmployeeData employeeData = new EmployeeData(EmployeeType.MANAGER, "123", "deepak", 21, 12);
+            Employee employee = new EmployeeFactory().MakeEmployee(employeeData);
+            Assert.IsType<Manager>(employee);
         }
     }
 }

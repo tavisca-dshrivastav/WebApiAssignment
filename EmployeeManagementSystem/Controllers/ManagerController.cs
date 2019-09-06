@@ -18,7 +18,7 @@ namespace EmployeeManagementSystem.Controllers
         {
             var managers = EmployeeList.empUnderManagerList.Keys;
             var empData = ControllerUtility.GetEmployeeDataFromRecord(managers.ToList<Employee>());
-            return empData;
+            return empData ?? (ActionResult<IEnumerable<EmployeeData>>)NotFound();
         }
 
         // GET api/values/5
@@ -35,13 +35,23 @@ namespace EmployeeManagementSystem.Controllers
         }
 
         
-
-
-
         // POST api/values
-        [HttpPost]
-        public void Post([FromBody] string value)
+        [HttpPost("add/")]
+        public EmployeeUnderManager Post([FromBody] EmployeeUnderManager employeeUnderManager)
         {
+            Employee manager = employeeUnderManager.ManagerId.GetEmployee();
+            List<Employee> employees = new List<Employee>();
+            foreach(var empId in employeeUnderManager.Employees)
+            {
+                var t = empId.GetEmployee();
+                if (t != null)
+                    employees.Add(t);
+            }
+            bool isManager = manager.GetType() == typeof(Manager);
+            if(isManager)
+                EmployeeList.AddManager(manager, employees);
+
+            return employeeUnderManager;
         }
 
         // PUT api/values/5
