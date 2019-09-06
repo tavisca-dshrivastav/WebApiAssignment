@@ -31,6 +31,15 @@ namespace EmployeeManagementSystem
             }
         };
 
+        public static bool updateEmployeeData(string id, EmployeeData record)
+        {
+            int recordIndex = employeeList.IndexOf(employeeList.Where<EmployeeData>(x => x.Id == id).FirstOrDefault<EmployeeData>());
+            if (recordIndex < 0)
+                return false;
+            employeeList[recordIndex] = record;
+            return true;
+        }
+
         public static EmployeeData GetManager(string id)
         {
             var managers = GetManagersData();
@@ -38,6 +47,29 @@ namespace EmployeeManagementSystem
                 if (manager.Id.Equals(id))
                     return manager;
             return null;
+        }
+
+        public static bool AssignEmployeesToManager(string managerId, string[] employeesId)
+        {
+            var manager = managerId.GetEmployeeData();
+            if (manager is null || !(new EmployeeFactory().MakeEmployee(manager) is Manager))
+                return false;
+            var employeeList = GetEmployeeFromIds(employeesId);
+            if (employeeList.Count <= 0)
+                return false;
+            employeeUnderManager[manager] = employeeList;
+
+            return true;
+        }
+
+        private static List<EmployeeData> GetEmployeeFromIds(string[] employeesId)
+        {
+            List<EmployeeData> employees = new List<EmployeeData>();
+            foreach (var empId in employeesId)
+            {
+                employees.Add(GetEmployeeData(empId));
+            }
+            return employees;
         }
 
         public static List<EmployeeData> GetEmployeesUnderManager(EmployeeData manager)

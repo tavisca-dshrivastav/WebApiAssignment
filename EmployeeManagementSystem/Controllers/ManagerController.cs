@@ -12,14 +12,14 @@ namespace EmployeeManagementSystem.Controllers
     [ApiController]
     public class ManagerController : ControllerBase
     {
-        // GET api/manager
+        // GET api/manager/
         [HttpGet]
         public ActionResult<IEnumerable<EmployeeData>> Get()
         {
             return EmployeeList.GetManagersData() ?? (ActionResult<IEnumerable<EmployeeData>>)NotFound("No Manager Found");
         }
 
-        // GET api/values/5
+        // GET api/manager/5
         [HttpGet("{id}")]
         public ActionResult<EmployeeData> Get(string id)
         {
@@ -34,7 +34,7 @@ namespace EmployeeManagementSystem.Controllers
         }
 
 
-        // POST api/values
+        // POST api/manager/add/
         [HttpPost("add/")]
         public ActionResult Post([FromBody] EmployeeUnderManager employeeUnderManager)
         {
@@ -44,14 +44,14 @@ namespace EmployeeManagementSystem.Controllers
             return StatusCode(201);
         }
 
-        // PUT api/values/5
-        [HttpPut("{id}")]
+        // PUT api/manager/update/5
+        [HttpPut("update/{id}")]
         public void Put(int id, [FromBody] string value)
         {
         }
 
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
+        // DELETE api/manager/delete/5
+        [HttpDelete("delete/{id}")]
         public void Delete(int id)
         {
         }

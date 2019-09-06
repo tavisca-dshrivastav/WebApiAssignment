@@ -41,10 +41,14 @@ namespace EmployeeManagementSystem.Controllers
             
         }
 
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        // PUT api/employee/update/5
+        [HttpPut("update/{id}")]
+        public ActionResult Put(string id, [FromBody] EmployeeData record)
         {
+            bool isSuccessfullyUpdated = EmployeeList.updateEmployeeData(id, record);
+            if (!isSuccessfullyUpdated)
+                return StatusCode(409);
+            return StatusCode(202);
         }
 
         // DELETE api/values/5
