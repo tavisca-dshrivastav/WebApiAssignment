@@ -42,7 +42,7 @@ namespace EmployeeManagementSystem.Controllers
         [HttpPost("add/")]
         public void Post([FromBody] EmployeeUnderManager employeeUnderManager)
         {
-            service.AddManager(employeeUnderManager.Employee, employeeUnderManager.EmployeesIdUnderManager);
+            service.AddManager(employeeUnderManager.ManagerInfo, employeeUnderManager.EmployeesIdUnderManager);
         }
 
         // PUT api/manager/update/5
