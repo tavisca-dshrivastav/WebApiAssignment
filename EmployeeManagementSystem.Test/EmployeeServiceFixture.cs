@@ -1,4 +1,5 @@
 ﻿using Xunit;
+using EmployeeManagementSystem.Services;
 using EmployeeManagementSystem.Models;
 using FluentAssertions;
 namespace EmployeeManagementSystem.Test
@@ -7,10 +8,29 @@ namespace EmployeeManagementSystem.Test
     {
         EmployeeData employeeData;
         [Fact]
-        public void Employee_data_should_have_id_name_age_salary_type()
+        public void Employee_service_should_get_employee()
         {
-            employeeData = new EmployeeData(EmployeeType.GENERALEMPLOYEE, "130", "Deepak", 21, 2321);
-            employeeData.Should().BeOfType<EmployeeData>();
+
+        }
+        [Fact]
+        public void Employee_service_should_add_employee()
+        {
+
+        }
+        [Fact]
+        public void Employee_service_should_update_employee()
+        {
+
+        }
+        [Fact]
+        public void Employee_service_should_delete_employee()
+        {
+
+        }
+            [Fact]
+        public void Employee_service_should_get_employee_by_id()
+        {
+
         }
     }
 }
