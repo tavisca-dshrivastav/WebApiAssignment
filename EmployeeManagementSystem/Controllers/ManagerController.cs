@@ -6,42 +6,43 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using EmployeeManagementSystem.Models;
 using EmployeeManagementSystem;
+using EmployeeManagementSystem.Services;
 namespace EmployeeManagementSystem.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+   
+   
     public class ManagerController : ControllerBase
     {
+        ManagerService service = new ManagerService();
         // GET api/manager/
         [HttpGet]
         public ActionResult<IEnumerable<EmployeeData>> Get()
         {
-            return EmployeeList.GetManagersData() ?? (ActionResult<IEnumerable<EmployeeData>>)NotFound("No Manager Found");
+            return service.GetAllManager().Select(x => x.Record).ToList<EmployeeData>();
         }
 
         // GET api/manager/5
         [HttpGet("{id}")]
         public ActionResult<EmployeeData> Get(string id)
         {
-            return EmployeeList.GetManager(id) ?? (ActionResult<EmployeeData>)NotFound("No Manager Found");
+            return service.GetManager(id).Record;
         }
 
         // GET api/manager/5/employees
         [HttpGet("{id}/employees")]
         public ActionResult<IEnumerable<EmployeeData>> GetEmployeesUnderManager(string id)
         {
-            return EmployeeList.GetEmployeesUnderManager(id.GetEmployeeData()) ?? (ActionResult<IEnumerable<EmployeeData>>)NotFound("No Employee Found");
+            return service.GetEmployeeUnderManager(id).Select(x=>x.Record).ToList<EmployeeData>();
         }
 
 
         // POST api/manager/add/
         [HttpPost("add/")]
-        public ActionResult Post([FromBody] EmployeeUnderManager employeeUnderManager)
+        public void Post([FromBody] EmployeeUnderManager employeeUnderManager)
         {
-            bool isSuccessfullyAssigned = EmployeeList.AssignEmployeesToManager(employeeUnderManager.ManagerId, employeeUnderManager.Employees);
-            if(!isSuccessfullyAssigned)
-                return StatusCode(409);
-            return StatusCode(201);
+            service.AddManager(employeeUnderManager.Employee, employeeUnderManager.EmployeesIdUnderManager);
         }
 
         // PUT api/manager/update/5
@@ -49,7 +50,7 @@ namespace EmployeeManagementSystem.Controllers
         public void Put(int id, [FromBody] string value)
         {
         }
-
+        
         // DELETE api/manager/delete/5
         [HttpDelete("delete/{id}")]
         public void Delete(int id)

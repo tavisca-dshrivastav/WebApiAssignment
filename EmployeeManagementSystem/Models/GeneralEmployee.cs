@@ -3,8 +3,9 @@
     public class GeneralEmployee : Employee
     {
 
-        public GeneralEmployee()
+        public GeneralEmployee(EmployeeData record): base(record)
         {
+
         } 
     }
 }

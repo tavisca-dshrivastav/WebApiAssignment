@@ -4,51 +4,40 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using EmployeeManagementSystem.Models;
-
+using EmployeeManagementSystem.Services;
 namespace EmployeeManagementSystem.Controllers
 {
     [Route("api/{controller}")]
     [ApiController]
     public class EmployeeController : ControllerBase
     {
+        EmployeeService service = new EmployeeService();
        
         // GET api/values
         [HttpGet]
         public ActionResult<IEnumerable<EmployeeData>> Get()
         {
-            return EmployeeList.employeeList ?? (ActionResult<IEnumerable<EmployeeData>>)NotFound();
+            return service.GetAllEmployee().Select(x=>x.Record).ToList<EmployeeData>();
         }
         [HttpGet("{id}")]
         public ActionResult<EmployeeData> GetEmployee(string id)
         {
-            return EmployeeList.GetEmployeeData(id) ?? (ActionResult<EmployeeData>)StatusCode(404);
+            return service.GetEmployee(id).Record;
         }
 
 
         // POST api/values
         [HttpPost("add")]
-        public  ActionResult Post([FromBody] EmployeeData record)
+        public  void Post([FromBody] EmployeeData record)
         {
-            try
-            {
-                record.AddEmployee();
-                return StatusCode(201);
-            }
-            catch
-            {
-                return StatusCode(409);
-            }
-            
+            service.AddEmployee(record);
         }
 
         // PUT api/employee/update/5
         [HttpPut("update/{id}")]
-        public ActionResult Put(string id, [FromBody] EmployeeData record)
+        public void Put(string id, [FromBody] EmployeeData record)
         {
-            bool isSuccessfullyUpdated = EmployeeList.updateEmployeeData(id, record);
-            if (!isSuccessfullyUpdated)
-                return StatusCode(409);
-            return StatusCode(202);
+            service.UpdateEmployee(id, record);
         }
 
         // DELETE api/values/5
