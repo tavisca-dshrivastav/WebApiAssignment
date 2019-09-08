@@ -15,38 +15,37 @@ namespace EmployeeManagementSystem.Controllers
        
         // GET api/values
         [HttpGet]
-        public ActionResult<IEnumerable<EmployeeData>> Get()
+        public async Task<ActionResult<IEnumerable<EmployeeData>>> Get()
         {
-            return service.GetAllEmployee().Select(x=>x.Record).ToList<EmployeeData>();
+            return await Task.Run(() => { return service.GetAllEmployee().Result.Select(x => x.Record).ToList<EmployeeData>() ?? (ActionResult<IEnumerable<EmployeeData>>)NotFound("No Employee Found"); });
         }
         [HttpGet("{id}")]
-        public ActionResult<EmployeeData> GetEmployee(string id)
+        public async Task<ActionResult<EmployeeData>> GetEmployee(string id)
         {
-            return service.GetEmployee(id).Record;
+            return await Task.Run(()=> { return service.GetEmployee(id).Result.Record ?? (ActionResult<EmployeeData>)NotFound("Employee Not Found"); });
         }
 
 
         // POST api/values
         [HttpPost("add")]
-        public  void Post([FromBody] EmployeeData record)
+        public async Task Post([FromBody] EmployeeData record)
         {
-            service.AddEmployee(record);
+            await Task.Run(()=>service.AddEmployee(EmployeeFactory.CreateEmployee(record)));
         }
 
         // PUT api/employee/update/5
         [HttpPut("update/{id}")]
-        public void Put(string id, [FromBody] EmployeeData record)
+        public async Task Put(string id, [FromBody] EmployeeData record)
         {
-            service.UpdateEmployee(id, record);
+            await Task.Run(()=>service.UpdateEmployee(id, EmployeeFactory.CreateEmployee(record)));
         }
 
         // DELETE api/values/5
         [HttpDelete("{id}")]
-        public void Delete(string id)
+        public async Task Delete(string id)
         {
-            service.DeleteEmployee(id);
+            await Task.Run(()=>service.DeleteEmployee(id));
         }
-
         
     }
 }

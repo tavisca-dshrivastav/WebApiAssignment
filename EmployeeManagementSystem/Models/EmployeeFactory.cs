@@ -7,6 +7,7 @@ namespace EmployeeManagementSystem.Models
 {
     public class EmployeeFactory : IEmployeeFactory
     {
+       
         public Employee MakeEmployee(EmployeeData record)
         {
             if (record.Type == EmployeeType.GENERALEMPLOYEE)
@@ -14,6 +15,10 @@ namespace EmployeeManagementSystem.Models
             else if(record.Type == EmployeeType.MANAGER)
                 return new Manager(record);
             throw new InvalidEmployeeTypeException("This is invalid Exception");
+        }
+        public static Employee CreateEmployee(EmployeeData record)
+        {
+            return new EmployeeFactory().MakeEmployee(record);
         }
     }
 }

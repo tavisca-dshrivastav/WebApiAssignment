@@ -12,35 +12,46 @@ namespace EmployeeManagementSystem.Services
         EmployeeService employeeService = new EmployeeService();
 
         ManagerDB mb = new ManagerDB();
-        public Employee GetManager(string id)
+        public async Task<Employee> GetManager(string id)
         {
-            var emp = employeeService.GetEmployee(id);
-            bool isManager = emp is Manager;
-            return isManager ? emp : null;
+           return await Task.Run(()=>
+            {
+                var emp = employeeService.GetEmployee(id).Result;
+                bool isManager = emp is Manager;
+                return isManager ? emp : null;
+            });
+        }
+
+        public async Task<List<Employee>> GetAllManager()
+        {
+            return await Task.Run(() => employeeService.GetAllEmployee().Result.Where<Employee>(x => x is Manager).ToList<Employee>());
         }
         
-        public List<Employee> GetAllManager()
+        public async Task AddManager(Manager manager, string[] employeeIds)
         {
-            return employeeService.GetAllEmployee().Where<Employee>(x=>x is Manager).ToList<Employee>();
+            await Task.Run(() =>
+            {
+                employeeService.AddEmployee(manager).RunSynchronously();
+                var employees = employeeService.GetEmployeesFromIds(employeeIds);
+                MakeManager(manager.Record.Id, employees.Result).RunSynchronously();
+            });
         }
 
-        public void AddManager(EmployeeData managerData, string[] employeeIds)
+        public async Task MakeManager(string managerId, List<Employee> employeeDatas)
         {
-            employeeService.AddEmployee(managerData);
-            var employees = employeeService.GetEmployeesFromIds(employeeIds);
-            MakeManager(managerData.Id, employees);
+            await Task.Run(() =>
+            {
+                var emp = (Manager)employeeService.GetEmployee(managerId).Result;
+                emp.EmployeesUnderManager = employeeDatas;
+            });
         }
 
-        public void MakeManager(string managerId, List<Employee> employeeDatas)
+        public async Task<List<Employee>> GetEmployeeUnderManager(string id)
         {
-            var emp = (Manager)employeeService.GetEmployee(managerId);
-            emp.EmployeesUnderManager = employeeDatas;
-        }
-
-        public List<Employee> GetEmployeeUnderManager(string id)
-        {
-            var emp = (Manager)employeeService.GetEmployee(id);
-            return emp.EmployeesUnderManager;
+            return await Task.Run(() => { 
+                var emp = (Manager)employeeService.GetEmployee(id).Result;
+                return emp.EmployeesUnderManager;
+            });
         }
     }
 }
