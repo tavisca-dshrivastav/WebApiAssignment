@@ -20,21 +20,29 @@ namespace EmployeeManagementSystem.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<EmployeeData>>> Get()
         {
-            return await Task.Run(()=> { return service.GetAllManager().Result.Select(x => x.Record).ToList<EmployeeData>() ?? (ActionResult<IEnumerable<EmployeeData>>)NotFound("No Manager Found"); });
+            return await Task.Run(()=> {
+                return service.GetAllManager()?.Select(x => x.Record).ToList<EmployeeData>()
+                ?? (ActionResult<IEnumerable<EmployeeData>>)NotFound("No Manager Found");
+            });
         }
 
         // GET api/manager/5
         [HttpGet("{id}")]
         public async Task<ActionResult<EmployeeData>> Get(string id)
         {
-            return await Task.Run(()=>{ return service.GetManager(id).Result.Record ?? (ActionResult<EmployeeData>)NotFound("No Manager Found"); });
+            return await Task.Run(()=>{
+                return service.GetManager(id)?.Record 
+                ?? (ActionResult<EmployeeData>)NotFound("No Manager Found");
+            });
         }
 
         // GET api/manager/5/employees
         [HttpGet("{id}/employees")]
         public async Task<ActionResult<IEnumerable<EmployeeData>>> GetEmployeesUnderManager(string id)
         {
-            return await Task.Run(()=>service.GetEmployeeUnderManager(id).Result.Select(x=>x.Record).ToList<EmployeeData>());
+            return await Task.Run(() => { 
+                return service.GetEmployeeUnderManager(id).Select(x => x.Record).ToList<EmployeeData>() ?? (ActionResult<IEnumerable<EmployeeData>>)NotFound("No Manager Found");
+                });
         }
 
 

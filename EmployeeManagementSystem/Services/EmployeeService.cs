@@ -8,39 +8,37 @@ namespace EmployeeManagementSystem.Services
 {
     public class EmployeeService
     {
-        public async Task<Employee> GetEmployee(string id)
+        public Employee GetEmployee(string id)
+
         {
-            return await Task.Run(()=> EmployeeDataDB.employeeList.Where<Employee>(x => x.Record.Id == id).ToList<Employee>().FirstOrDefault<Employee>());
+            return EmployeeDataDB.employeeList.Where<Employee>(x => x.Record.Id == id).ToList<Employee>().FirstOrDefault<Employee>();
         }
-        public async Task<List<Employee>> GetAllEmployee()
+        public List<Employee> GetAllEmployee()
         {
-            return await Task.Run(() => EmployeeDataDB.employeeList);
+            return EmployeeDataDB.employeeList;
         }
-        public async Task AddEmployee(Employee employee)
+        public void AddEmployee(Employee employee)
         {
-            await Task.Run(()=> EmployeeDataDB.employeeList.Add(employee));
+            EmployeeDataDB.employeeList.Add(employee);
         }
-        public async Task UpdateEmployee(string id, Employee employee)
+        public void UpdateEmployee(string id, Employee employee)
         {
-            await Task.Run(()=> 
-                        EmployeeDataDB.employeeList[EmployeeDataDB.employeeList.IndexOf(GetEmployee(id).Result)] =
-                        employee);
+           EmployeeDataDB.employeeList[EmployeeDataDB.employeeList.IndexOf(GetEmployee(id))] =
+                        employee;
         }
-        public async Task DeleteEmployee(string id)
+        public void DeleteEmployee(string id)
         {
-            await Task.Run(()=>EmployeeDataDB.employeeList.RemoveAt(EmployeeDataDB.employeeList.IndexOf(GetEmployee(id).Result)));
+            EmployeeDataDB.employeeList.RemoveAt(EmployeeDataDB.employeeList.IndexOf(GetEmployee(id)));
         }
 
-        public async Task<List<Employee>> GetEmployeesFromIds(string[] employeeIds)
+        public List<Employee> GetEmployeesFromIds(string[] employeeIds)
         {
-          return  await Task.Run(() =>{
-               var employeeList = new List<Employee>();
-               foreach (var empId in employeeIds){
-                   var emp = GetEmployee(empId).Result;
+            var employeeList = new List<Employee>();
+            foreach (var empId in employeeIds){
+                   var emp = GetEmployee(empId);
                    employeeList.Add(emp);
                }
                return employeeList;
-           });
         }
     }
 }
