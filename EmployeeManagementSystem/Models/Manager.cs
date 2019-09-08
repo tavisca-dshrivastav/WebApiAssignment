@@ -1,17 +1,14 @@
-﻿namespace EmployeeManagementSystem.Models
+﻿using System.Collections.Generic;
+
+namespace EmployeeManagementSystem.Models
 {
     public class Manager : Employee
     {
-        private EmployeeData record;
 
-        public Manager(EmployeeData record)
+        public List<Employee> EmployeesUnderManager { get; set; }
+        public Manager(EmployeeData record) : base(record)
         {
-            this.record = record;
-        }
-
-        public override EmployeeData GetEmployeeData()
-        {
-            return record;
+           
         }
     }
 }

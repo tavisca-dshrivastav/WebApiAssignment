@@ -1,0 +1,92 @@
+pipeline{
+    agent { label 'master' }
+
+    parameters{
+   
+        string(
+            name: "DOCKER_USER_NAME",
+            description: "Enter Docker hub Username"
+        )
+        string(
+            name: "DOCKER_PASSWORD",
+            description:  "Enter Docker hub Password"
+        )
+        string(
+            name: "DOCKER_REPO",
+            defaultValue: "employee_management_api"
+        )
+        string(
+            name: "SOLUTION_PATH",
+            defaultValue: "EmployeeManagementSystem.sln",
+            description: "SOLUTION_PATH"
+        )
+   
+        string(
+            name: "TEST_SOLUTION_PATH",
+            defaultValue: "EmployeeManagementSystem.Test/EmployeeManagementSystem.Test.csproj",
+            description: "TEST SOLUTION PATH"
+        )
+        
+        string(
+            name: "PROJECT_PATH",
+            defaultValue: "EmployeeManagementSystem/EmployeeManagementSystem.csproj",
+        )
+        
+         string(
+            name: "SOLUTION_DLL_FILE",
+            defaultValue: "EmployeeManagementSystem.dll",
+        )
+    
+     
+         string(
+            name: "SONAR_TOKEN",
+            defaultValue: "673159a57589c90cc8c2011b00386c56635dc1c8",
+        )
+        
+      
+        choice(
+            name: "RELEASE_ENVIRONMENT",
+            choices: ["Build","Deploy"],
+            description: "Tick what you want to do"
+        )
+    }
+    stages{
+        stage('Build'){
+            when{
+                expression{params.RELEASE_ENVIRONMENT == "Build" || params.RELEASE_ENVIRONMENT == "Deploy"}
+            }
+            steps{
+            
+
+                    powershell(script: 'dotnet build') 
+                    powershell(script: 'dotnet test') 
+                  
+               powershell'''
+                    echo '====================Publish Start ================'
+                    dotnet publish ${PROJECT_PATH}
+                    echo '=====================Publish Completed============'
+                '''
+    
+            }
+        }
+        
+        stage ('Deploy') {
+            when{
+                expression{params.RELEASE_ENVIRONMENT == "Deploy"}
+            }
+            steps {
+                                
+                powershell "Copy-Item EmployeeManagementSystem/bin/Debug/netcoreapp2.2/publish/* infra/docker/ -Recurse"
+                powershell "docker build infra/docker/ --tag=${DOCKER_REPO}:${BUILD_NUMBER}"    
+                powershell "docker login -u ${DOCKER_USER_NAME} -p ${DOCKER_PASSWORD}"
+                powershell "docker tag ${DOCKER_REPO}:${BUILD_NUMBER} ${DOCKER_USER_NAME}/${DOCKER_REPO}:${BUILD_NUMBER}"
+                powershell "docker push ${DOCKER_USER_NAME}/${DOCKER_REPO}:${BUILD_NUMBER}"
+            }
+        }
+    }
+    post{
+        success{
+            deleteDir()
+       }
+    }
+}

@@ -7,6 +7,10 @@ namespace EmployeeManagementSystem.Models
 {
     public abstract class Employee
     {
-        public abstract EmployeeData GetEmployeeData();
+        public EmployeeData Record { get; private set; }
+        public Employee(EmployeeData record)
+        {
+            Record = record;
+        }
     }
 }

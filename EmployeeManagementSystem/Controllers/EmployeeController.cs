@@ -4,51 +4,48 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using EmployeeManagementSystem.Models;
-
+using EmployeeManagementSystem.Services;
 namespace EmployeeManagementSystem.Controllers
 {
-    [Route("api")]
+    [Route("api/{controller}")]
     [ApiController]
     public class EmployeeController : ControllerBase
     {
+        EmployeeService service = new EmployeeService();
        
         // GET api/values
-        [HttpGet("employee")]
-        public ActionResult<IEnumerable<EmployeeData>> Get()
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<EmployeeData>>> Get()
         {
-            var recordList = ControllerUtility.GetEmployeeDataFromRecord(EmployeeList.employeeList);
-            return recordList ?? (ActionResult<IEnumerable<EmployeeData>>)NotFound();
+            return await Task.Run(() => { return service.GetAllEmployee().Result.Select(x => x.Record).ToList<EmployeeData>() ?? (ActionResult<IEnumerable<EmployeeData>>)NotFound("No Employee Found"); });
+        }
+        [HttpGet("{id}")]
+        public async Task<ActionResult<EmployeeData>> GetEmployee(string id)
+        {
+            return await Task.Run(()=> { return service.GetEmployee(id).Result.Record ?? (ActionResult<EmployeeData>)NotFound("Employee Not Found"); });
         }
 
-        // GET api/values/5
-        [HttpGet("manager/{id}/employee")]
-        public ActionResult<IEnumerable<EmployeeData>> Get(string id)
-        {
-            var recordList = ControllerUtility.GetEmployeeListUnderManager(id);
-            List<EmployeeData> empData = ControllerUtility.GetEmployeeDataFromRecord(recordList);
-            return empData ?? (ActionResult<IEnumerable<EmployeeData>>)NotFound();
-        }
 
         // POST api/values
-        [HttpPost("employee/add")]
-        public ActionResult Post([FromBody] EmployeeData record)
+        [HttpPost("add")]
+        public async Task Post([FromBody] EmployeeData record)
         {
-            Employee emp = new EmployeeFactory().MakeEmployee(record);
-            EmployeeList.employeeList.Add(emp);
-      
-            return (ActionResult)CreatedAtAction("status code", 201);
+            await Task.Run(()=>service.AddEmployee(EmployeeFactory.CreateEmployee(record)));
         }
 
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        // PUT api/employee/update/5
+        [HttpPut("update/{id}")]
+        public async Task Put(string id, [FromBody] EmployeeData record)
         {
+            await Task.Run(()=>service.UpdateEmployee(id, EmployeeFactory.CreateEmployee(record)));
         }
 
         // DELETE api/values/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task Delete(string id)
         {
+            await Task.Run(()=>service.DeleteEmployee(id));
         }
+        
     }
 }
