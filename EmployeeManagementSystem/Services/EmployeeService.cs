@@ -4,14 +4,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using EmployeeManagementSystem.DB;
 using EmployeeManagementSystem.Models;
+using EmployeeManagementSystem.Services.Contract;
 namespace EmployeeManagementSystem.Services
 {
-    public class EmployeeService
+    public class EmployeeService:IEmployeeService
     {
         public Employee GetEmployee(string id)
 
         {
-            return EmployeeDataDB.employeeList.Where<Employee>(x => x.Record.Id == id).ToList<Employee>().FirstOrDefault<Employee>();
+            return EmployeeDataDB.employeeList.Where<Employee>(x => x.Record.Id == id).FirstOrDefault<Employee>();
         }
         public List<Employee> GetAllEmployee()
         {
@@ -37,8 +38,9 @@ namespace EmployeeManagementSystem.Services
             foreach (var empId in employeeIds){
                    var emp = GetEmployee(empId);
                    employeeList.Add(emp);
-               }
-               return employeeList;
+             }
+             return employeeList;
         }
+        
     }
 }

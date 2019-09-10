@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EmployeeManagementSystem.Models;
+using Microsoft.EntityFrameworkCore;
+
 namespace EmployeeManagementSystem.DB
 {
     public static class EmployeeDataDB
@@ -17,6 +19,7 @@ namespace EmployeeManagementSystem.DB
                 EmployeeFactory.CreateEmployee(new EmployeeData(EmployeeType.GENERALEMPLOYEE, "128", "Rohit", 21, 12233)),
                 EmployeeFactory.CreateEmployee(new EmployeeData(EmployeeType.GENERALEMPLOYEE, "129", "Rahul", 21, 12323))
             };
-        
+       
+
     }
 }

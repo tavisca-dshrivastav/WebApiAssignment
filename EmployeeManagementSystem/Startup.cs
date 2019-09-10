@@ -10,7 +10,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-
+using FluentValidation.AspNetCore;
+using EmployeeManagementSystem.Services.Validators;
+using EmployeeManagementSystem.Middleware;
 namespace EmployeeManagementSystem
 {
     public class Startup
@@ -26,7 +28,8 @@ namespace EmployeeManagementSystem
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2).AddFluentValidation();
+            services.AddTransient<EmployeeDataValidator>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -43,7 +46,9 @@ namespace EmployeeManagementSystem
             }
 
             app.UseHttpsRedirection();
+            //app.UseMiddleware<MyCustomMiddleware>();
             app.UseMvc();
+
         }
     }
 }
